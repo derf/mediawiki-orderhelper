@@ -3,7 +3,6 @@
 use strict;
 use warnings;
 use 5.014;
-use autodie;
 use utf8;
 
 use DateTime;
@@ -18,15 +17,18 @@ my $mw = MediaWiki::API->new(
 	on_error => \&on_error
 }
 );
+my $mw_error;
 
 sub on_error {
-	print 'Error code: ' . $mw->{error}->{code} . "\n";
-	print $mw->{error}->{stacktrace} . "\n";
+	$mw_error = 'Error code: ' . $mw->{error}->{code} . "\n"
+	. $mw->{error}->{stacktrace} . "\n";
 	exit 1;
 }
 
 sub mw_edit {
 	my ($page, $content) = @_;
+
+	$mw_error = undef;
 
 	my $timestamp = $mw->get_page( {title => $page} )->{timestamp};
 	$mw->edit( {
@@ -36,11 +38,12 @@ sub mw_edit {
 		text => $content,
 		bot => 1,
 	} )
-	|| die $mw->{error}->{code} . ': ' . $mw->{error}->{details};
+	or $mw_error = $mw->{error}->{code} . ': ' . $mw->{error}->{details};
 }
 
 sub mw_get {
 	my ($page) = @_;
+	$mw_error = undef;
 	return $mw->get_page( {title => $page} )->{'*'};
 }
 
@@ -162,7 +165,12 @@ sub preview {
 	if ($action ~~ [qw[add finalize]]) {
 		mw_edit("Sammelbestellung/$site", $content);
 		$mw->logout;
-		$self->redirect_to("https://wiki.chaosdorf.de/Sammelbestellung/$site");
+		if ($mw_error) {
+			$self->render('error', error => $mw_error);
+		}
+		else {
+			$self->redirect_to("https://wiki.chaosdorf.de/Sammelbestellung/$site");
+		}
 		return;
 	}
 
