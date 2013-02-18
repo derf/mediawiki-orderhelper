@@ -1,0 +1,48 @@
+<div>
+% if (my $errors = stash('errors') ) {
+ <h1>Errors</h1>
+ <ul>
+%   for my $error (@{$errors}) {
+     <li>
+%=      $error
+    </li>
+%   }
+ </ul>
+% }
+</div>
+<div>
+<h1>Preview</h1>
+<ul>
+<li>Bestellsumme: <%= $total %></li>
+<li>Versandkosten: <%= $shipping %></li>
+</ul>
+<table>
+<tr><th>Nick</th><th>Anteil</th><th>Versandkostenanteil</th><th>Summe</th></tr>
+% my $total = stash('total');
+% my $shipping = stash('shipping');
+% my %order = %{ stash('order') };
+% for my $nick (keys %order ) {
+% my $shippingpart = $shipping * $order{$nick} / $total;
+<tr>
+<td> <%= $nick %> </td><td> <%= sprintf('%.2f', $order{$nick}) %> </td>
+<td> <%= sprintf('%.2f', $shippingpart) %> </td>
+<td> <%= sprintf('%.2f', $order{$nick} + $shippingpart) %> </td>
+<tr>
+% }
+</table>
+</div>
+<div>
+%= form_for '/' => begin
+%= hidden_field 'action' => 'add'
+%= hidden_field 'site' => stash('site')
+%= submit_button 'Übernehmen'
+% end
+</div>
+<div>
+%= form_for '/' => begin
+%= hidden_field 'action' => 'finalize'
+%= hidden_field 'site' => stash('site')
+%= submit_button 'Übernehmen und festhalten'
+(as in: "Ich hab bestellt", weitere Änderungen an der Kostenaufteilung nur
+noch manuell)
+% end
