@@ -132,7 +132,8 @@ sub preview {
 		$content .= "\n\n";
 	}
 
-	$content .= sprintf("Bestellsumme: %.2f\n", $total);
+	$content .= sprintf("Bestellsumme: %.2f + %.2f == %.2f\n", $total,
+		$shipping, $total + $shipping);
 	$content .= "{| class=\"wikitable\"\n";
 	$content .= "! Wer !! Summe !! Versandkostenanteil !! Gesamt !! Bezahlt\n";
 

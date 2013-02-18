@@ -15,6 +15,7 @@
 <ul>
 <li>Bestellsumme: <%= $total %></li>
 <li>Versandkosten: <%= $shipping %></li>
+<li>Gesamt: <%= $total + $shipping %></li>
 </ul>
 <table>
 <tr><th>Nick</th><th>Anteil</th><th>Versandkostenanteil</th><th>Summe</th></tr>
