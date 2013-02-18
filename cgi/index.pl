@@ -64,14 +64,6 @@ sub preview {
 	my $action = $self->param('action') // 'none';
 	my $site = $self->param('site');
 
-	$mw->login(
-	{
-		lgname     => $ENV{WIKI_USER},
-		lgpassword => $ENV{WIKI_PASSWORD},
-		lgdomain   => 'local',
-	}
-	);
-
 	my $re_shipping = qr{
 		Versand(kosten)? \s* : \s* (?<shipping> \d+ [,.] \d+) }iox;
 	my $re_orderline = qr{
@@ -89,7 +81,6 @@ sub preview {
 	my $finalized = 0;
 
 	if (not $content) {
-		$mw->logout;
 		$self->render('error', error => "invalid site: $site");
 		return;
 	}
@@ -154,7 +145,6 @@ sub preview {
 	$content .= "|}\n <!-- DO NOT EDIT BELOW THIS LINE -->";
 
 	if ($action ne 'none' and $finalized) {
-		$mw->logout;
 		$self->render('error', error => 'order already placed. automatic changes prohibited');
 		return;
 	}
@@ -164,7 +154,6 @@ sub preview {
 	}
 	if ($action ~~ [qw[add finalize]]) {
 		mw_edit("Sammelbestellung/$site", $content);
-		$mw->logout;
 		if ($mw_error) {
 			$self->render('error', error => $mw_error);
 		}
@@ -174,8 +163,6 @@ sub preview {
 		return;
 	}
 
-	$mw->logout;
-
 	$self->render( 'main',
 		errors => \@errors,
 		order => \%orders,
@@ -184,6 +171,14 @@ sub preview {
 		site => $site,
 	);
 }
+
+$mw->login(
+{
+	lgname     => $ENV{WIKI_USER},
+	lgpassword => $ENV{WIKI_PASSWORD},
+	lgdomain   => 'local',
+}
+);
 
 get '/' => \&preview;
 
