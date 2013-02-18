@@ -88,6 +88,7 @@ sub preview {
 	for my $line (split(/\n/, $content)) {
 		if ($line =~ $re_shipping) {
 			$shipping = $+{shipping};
+			$shipping =~ tr{,}{.};
 		}
 		elsif ($line =~ $re_orderline) {
 			my ($part, $desc, $price, $amount, $sum, $nick) =
