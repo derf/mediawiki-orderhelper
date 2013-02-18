@@ -13,9 +13,9 @@
 <div>
 <h1>Aufteilung</h1>
 <ul>
-<li>Bestellsumme: <%= $total %></li>
-<li>Versandkosten: <%= $shipping %></li>
-<li>Gesamt: <%= $total + $shipping %></li>
+<li>Bestellsumme: <%= sprintf('%.2f', $total) %></li>
+<li>Versandkosten: <%= sprintf('%.2f', $shipping) %></li>
+<li>Gesamt: <%= sprintf('%.2f', $total + $shipping) %></li>
 </ul>
 <table>
 <tr><th>Nick</th><th>Anteil</th><th>Versandkostenanteil</th><th>Summe</th></tr>
