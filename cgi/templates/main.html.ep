@@ -32,6 +32,9 @@
 </table>
 </div>
 <div>
+Ins Wiki eintragen:
+</div>
+<div>
 %= form_for '/' => begin
 %= hidden_field 'action' => 'add'
 %= hidden_field 'site' => stash('site')
