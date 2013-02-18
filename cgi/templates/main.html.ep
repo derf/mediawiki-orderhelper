@@ -1,6 +1,6 @@
 <div>
 % if (my $errors = stash('errors') ) {
- <h1>Errors</h1>
+ <h1>Fehler</h1>
  <ul>
 %   for my $error (@{$errors}) {
      <li>
@@ -11,7 +11,7 @@
 % }
 </div>
 <div>
-<h1>Preview</h1>
+<h1>Aufteilung</h1>
 <ul>
 <li>Bestellsumme: <%= $total %></li>
 <li>Versandkosten: <%= $shipping %></li>
