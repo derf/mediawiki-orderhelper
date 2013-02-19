@@ -1,5 +1,6 @@
 <div>
-% if (my $errors = stash('errors') ) {
+% my $errors = stash('errors')
+% if ( $errors and @{ $errors } ) {
  <h1>Fehler</h1>
  <ul>
 %   for my $error (@{$errors}) {
