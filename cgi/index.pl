@@ -208,6 +208,16 @@ sub preview {
 	return;
 }
 
+sub help {
+	my ($self) = @_;
+
+	$self->render(
+		'help',
+		layout => 'pod',
+		version => $VERSION,
+	);
+}
+
 $mw->login(
 	{
 		lgname     => $ENV{WIKI_USER},
@@ -217,6 +227,7 @@ $mw->login(
 );
 
 get '/' => \&preview;
+get '/help' => \&help;
 
 app->config(
 	hypnotoad => {
@@ -226,5 +237,7 @@ app->config(
 	},
 );
 app->defaults( layout => 'default' );
+
+plugin PODRenderer => {no_perldoc => 1, preprocess => 'ep'};
 
 app->start;

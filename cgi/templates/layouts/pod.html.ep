@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Chaosdorf Mediawiki-Sammelbestellungs-Helfer</title>
+	<meta charset="UTF-8">
+
+	<style type="text/css">
+
+	div.pod {
+		margin-left: auto;
+		margin-right: auto;
+		text-align: justify;
+		font-family: Monospace;
+		max-width: 800px;
+	}
+
+	div.pod h1,
+	div.pod h2,
+	div.pod h3 {
+		margin-top: 2em;
+		font-size: 100%;
+		color: #333399;
+	}
+
+	div.pod h2 {
+		margin-left: 1.7em;
+	}
+
+	div.pod h3 {
+		margin-left: 3.4em;
+	}
+
+	div.pod a {
+		text-decoration: none;
+		color: #333399;
+	}
+
+	div.pod
+	a.toplink {
+		display: none;
+		text-align: right;
+		font-size: 90%;
+		color: #333399;
+		text-decoration: none;
+	}
+
+	div.about {
+		position: absolute;
+		right: 1em;
+		top: 1em;
+		font-size: 90%;
+		color: #666666;
+	}
+
+	div.about a {
+		color: #000066;
+		text-decoration: none;
+	}
+
+	input, select {
+		border: 1px solid black;
+	}
+
+
+	</style>
+</head>
+<body>
+
+<div class="about">
+<a href="https://github.com/derf/mediawiki-orderhelper">
+mediawiki-orderhelper</a> v<%= $version %><br/>
+(<a href="help">help</a>)<br/>
+</div>
+
+<div class="pod">
+%= content
+</div>
+
+</body>
+</html>
+

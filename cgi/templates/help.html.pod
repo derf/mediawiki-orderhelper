@@ -1,0 +1,67 @@
+=head1 NAME
+
+mediawiki-orderhelper - Read a list of orders from a wiki, create a table with
+amount, nickname pairs.
+
+=head1 SYNOPSIS
+
+C<< http://mw-oh.finalrewind.org/?site= >>I<sitename>
+
+Where I<sitename> must match
+C<< https://wiki.chaosdorf.de/Sammelbestellung/ >>I<sitename>
+
+=head1 DESCRIPTION
+
+B<mediawiki-orderhelper> expects to find table lines of the following kind in
+the wiki page:
+
+  | part no || part desc || price || amount || sum || ordered by
+
+I<part no> and I<part desc> are only used to indicate lines in error messages.
+All calculations are done using I<sum> and I<ordered by>. If I<sum> does not
+match I<price> x I<amount>, a warning is printed.
+
+Note that I<price>, I<amount> and I<sum> must be numbers and must not contain
+a currency. You may specify numbers both as C<< 1,23 >> and C<< 1.23 >>.
+
+Example line:
+
+  | AKL 057-03 || Anreihklemme 3-polig, RM5,08 ||   0,30 ||  20 ||  6,00 || derf
+
+Additionally, it will look for either C<< Versandkosten: 1,23 >> or
+C<< Versand: 1,23 >> to indicate the shipping price.
+
+Based on these, it will create a new table with one entry per ordering person.
+
+Let I<shipping> be the shipping price, I<total> the sum of all ordered parts,
+and I<nametotal> the sum of all parts ordered by the line's person.
+Each line contains the person's name, their I<nametotal>, their shipping part
+(calculated as C<< shipping * nametotal / total >>) and the sum of these two.
+
+Additionally, a fifth empty column is added, which can be edited manually
+to indicate if / how much someone has paid.
+
+=head1 HANDLED ERRORS
+
+=head2 MISCALCULATED SUM
+
+If a line's I<sum> does not equal its I<price> times I<amount>, a warning is
+printed. The line is still taken into account for all calculations. Only the
+I<sum> will be used.
+
+=head2 UNPARSEABLE NUMBERS
+
+If a price / amount is not parseable, a warning will be printed and the
+affected line will not be used for calculations.
+
+=head1 BUGS
+
+Probably many. If you find one, let me know.
+
+=head1 AUTHOR
+
+Daniel Friesel E<lt>derf@finalrewind.orgE<gt>
+
+=head1 LICENSE
+
+  0. You just DO WHAT THE FUCK YOU WANT TO.
