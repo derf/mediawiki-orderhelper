@@ -13,9 +13,33 @@
 	body {
 		margin: 2em;
 	}
+
+	div.about {
+		position: absolute;
+		right: 1em;
+		top: 1em;
+		font-size: 90%;
+		color: #666666;
+	}
+
+	div.about a {
+		color: #000066;
+		text-decoration: none;
+	}
+
+	input, select {
+		border: 1px solid black;
+	}
+
 	</style>
 </head>
 <body>
+
+<div class="about">
+<a href="https://github.com/derf/mediawiki-orderhelper">
+mediawiki-orderhelper</a> v<%= $version %><br/>
+(<a href="help">help</a>)<br/>
+</div>
 
 %= content
 
