@@ -77,7 +77,7 @@ sub preview {
 	my $shipping = 0;
 	my $total = 0;
 	my $ymd = DateTime->now( time_zone => 'Europe/Berlin' )->ymd;
-	my $tms = DateTime->now( time_zone => 'Europe/Berlin' )->tms;
+	my $hms = DateTime->now( time_zone => 'Europe/Berlin' )->hms;
 	my $nochangeline = '<!-- automatic changes prohibited -->';
 	my $finalized = 0;
 
@@ -125,7 +125,7 @@ sub preview {
 
 	$content =~ s{ \n* === \s* Kosten [^=]* === .* $ }{}sx;
 
-	$content .= "\n\n=== Kosten (Stand $ymd $tms) ===\n\n";
+	$content .= "\n\n=== Kosten (Stand $ymd $hms) ===\n\n";
 
 	$content .= "<!-- automatically generated -->\n\n";
 
