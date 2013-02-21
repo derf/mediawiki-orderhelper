@@ -84,6 +84,7 @@ sub preview {
 	my $hms          = DateTime->now( time_zone => 'Europe/Berlin' )->hms;
 	my $nochangeline = '<!-- automatic changes prohibited -->';
 	my $finalized    = 0;
+	my $csv          = q{};
 
 	if ( not $content ) {
 		$self->render(
@@ -136,6 +137,8 @@ sub preview {
 
 			$orders{$nick} += $sum;
 			$total += $sum;
+
+			$csv .= sprintf( "%s;%d\n", $part, $amount );
 		}
 	}
 
@@ -177,6 +180,16 @@ sub preview {
 		return;
 	}
 
+	if ( $action eq 'csv' ) {
+		$self->res->headers->content_disposition(
+			'attachment; filename=chaosdorf-reichelt.csv;');
+		$self->render(
+			data   => $csv,
+			format => 'csv',
+		);
+		return;
+	}
+
 	if ( $action eq 'finalize' ) {
 		$content .= "\n$nochangeline\n";
 	}
@@ -213,7 +226,7 @@ sub help {
 
 	$self->render(
 		'help',
-		layout => 'pod',
+		layout  => 'pod',
 		version => $VERSION,
 	);
 }
@@ -226,7 +239,7 @@ $mw->login(
 	}
 );
 
-get '/' => \&preview;
+get '/'     => \&preview;
 get '/help' => \&help;
 
 app->config(
@@ -238,6 +251,9 @@ app->config(
 );
 app->defaults( layout => 'default' );
 
-plugin PODRenderer => {no_perldoc => 1, preprocess => 'ep'};
+plugin PODRenderer => {
+	no_perldoc => 1,
+	preprocess => 'ep'
+};
 
 app->start;
