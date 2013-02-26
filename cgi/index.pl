@@ -9,7 +9,7 @@ use DateTime;
 use MediaWiki::API;
 use Mojolicious::Lite;
 
-our $VERSION = '0.00';
+our $VERSION = '0.01';
 
 my $mw = MediaWiki::API->new(
 	{
