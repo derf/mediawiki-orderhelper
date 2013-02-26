@@ -13,7 +13,7 @@ our $VERSION = '0.00';
 
 my $mw = MediaWiki::API->new(
 	{
-		api_url  => 'https://wiki.chaosdorf.de/api.php',
+		api_url  => "$ENV{WIKI_URL}/api.php",
 		on_error => \&on_error
 	}
 );
@@ -75,7 +75,7 @@ sub preview {
 		(?<price> [^|]+ ) \|\| (?<amount> [^|]+ ) \|\|
 		(?<sum> [^|]+ ) \|\| (?<nick> [^|]+ ) $ }ox;
 
-	my $content = mw_get("Sammelbestellung/$site");
+	my $content = mw_get("$ENV{WIKI_PREFIX}/$site");
 	my @errors;
 	my %orders;
 	my $shipping     = 0;
@@ -182,7 +182,7 @@ sub preview {
 
 	if ( $action eq 'csv' ) {
 		$self->res->headers->content_disposition(
-			'attachment; filename=chaosdorf-reichelt.csv;');
+			'attachment; filename=reichelt.csv;');
 		$self->render(
 			data   => $csv,
 			format => 'csv',
@@ -194,7 +194,7 @@ sub preview {
 		$content .= "\n$nochangeline\n";
 	}
 	if ( $action ~~ [qw[add finalize]] ) {
-		mw_edit( "Sammelbestellung/$site", $content );
+		mw_edit( "$ENV{WIKI_PREFIX}/$site", $content );
 		if ($mw_error) {
 			$self->render(
 				'error',
@@ -204,7 +204,7 @@ sub preview {
 		}
 		else {
 			$self->redirect_to(
-				"https://wiki.chaosdorf.de/Sammelbestellung/$site");
+				"$ENV{WIKI_URL}/$ENV{WIKI_PREFIX}/$site");
 		}
 		return;
 	}
