@@ -29,7 +29,7 @@
 <td> <%= $nick %> </td><td> <%= sprintf('%.2f', $order{$nick}) %> </td>
 <td> <%= sprintf('%.2f', $shippingpart) %> </td>
 <td> <%= sprintf('%.2f', $order{$nick} + $shippingpart) %> </td>
-<tr>
+</tr>
 % }
 </table>
 </div>
