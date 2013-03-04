@@ -162,7 +162,7 @@ sub preview {
 	$content .= "{| class=\"wikitable\"\n";
 	$content .= "! Wer !! Summe !! Versandkostenanteil !! Gesamt !! Bezahlt\n";
 
-	for my $nick ( keys %orders ) {
+	for my $nick ( sort keys %orders ) {
 		my $shippingpart = $shipping * $orders{$nick} / $total;
 		$content .= sprintf( "|-\n| %20s || %.2f || %.2f || %.2f || \n",
 			$nick, $orders{$nick}, $shippingpart,
