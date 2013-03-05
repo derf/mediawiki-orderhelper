@@ -68,6 +68,8 @@ sub preview {
 	my $action = $self->param('action') // 'none';
 	my $site = $self->param('site');
 
+	my $re_flag = qr{
+		! (?<name> \S+ ) (?: \s* [*] \s* (?<value> \d+ [,.] \d+ ) )? }ox;
 	my $re_shipping = qr{
 		Versand(kosten)? \s* : \s* (?<shipping> \d+ [,.] \d+) }iox;
 	my $re_orderline = qr{
@@ -78,6 +80,7 @@ sub preview {
 	my $content = mw_get("$ENV{WIKI_PREFIX}/$site");
 	my @errors;
 	my %orders;
+	my %flag;
 	my $shipping     = 0;
 	my $total        = 0;
 	my $ymd          = DateTime->now( time_zone => 'Europe/Berlin' )->ymd;
@@ -96,6 +99,12 @@ sub preview {
 	}
 
 	for my $line ( split( /\n/, $content ) ) {
+		if ($line =~ $re_flag ) {
+			my $flagname = lc($+{name});
+			my $value = $+{value} || 1;
+			$value   =~ tr{,}{.};
+			$flag{$flagname} = $value;
+		}
 		if ( $line =~ $re_shipping ) {
 			$shipping = $+{shipping};
 			$shipping =~ tr{,}{.};
@@ -134,6 +143,12 @@ sub preview {
 					)
 				);
 			}
+			if ($flag{mwst}) {
+				$sum *= $flag{mwst};
+			}
+			if ($flag{rabatt}) {
+				$sum *= $flag{rabatt};
+			}
 
 			$orders{$nick} += $sum;
 			$total += $sum;
@@ -155,6 +170,10 @@ sub preview {
 	if (@errors) {
 		$content .= join( "\n", map { "* $_" } @errors );
 		$content .= "\n\n";
+	}
+
+	if ($flag{mwstversand} and $flag{mwst}) {
+		$shipping *= $flag{mwst};
 	}
 
 	$content .= sprintf( "Bestellsumme: %.2f + %.2f == %.2f\n",
