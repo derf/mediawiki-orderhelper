@@ -60,7 +60,7 @@ sub trim {
 
 sub is_float {
 	my ($float) = @_;
-	return ( $float =~ m{ ^ \d+ (?: [.] \d\d )? $ }x );
+	return ( $float =~ m{ ^ \d+ (?: [.] \d\d\d? )? $ }x );
 }
 
 sub preview {
