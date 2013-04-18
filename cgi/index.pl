@@ -77,6 +77,9 @@ sub preview {
 		(?<price> [^|]+ ) \|\| (?<amount> [^|]+ ) \|\|
 		(?<sum> [^|]+ ) \|\| (?<nick> [^|]+ ) $ }ox;
 
+	my $re_oldorder = qr{
+		^ = = \s* alt }ox;
+
 	my $content = mw_get("$ENV{WIKI_PREFIX}/$site");
 	my @errors;
 	my %orders;
@@ -99,10 +102,10 @@ sub preview {
 	}
 
 	for my $line ( split( /\n/, $content ) ) {
-		if ($line =~ $re_flag ) {
-			my $flagname = lc($+{name});
+		if ( $line =~ $re_flag ) {
+			my $flagname = lc( $+{name} );
 			my $value = $+{value} || 1;
-			$value   =~ tr{,}{.};
+			$value =~ tr{,}{.};
 			$flag{$flagname} = $value;
 		}
 		if ( $line =~ $re_shipping ) {
@@ -143,10 +146,10 @@ sub preview {
 					)
 				);
 			}
-			if ($flag{mwst}) {
+			if ( $flag{mwst} ) {
 				$sum *= $flag{mwst};
 			}
-			if ($flag{rabatt}) {
+			if ( $flag{rabatt} ) {
 				$sum *= $flag{rabatt};
 			}
 
@@ -154,6 +157,9 @@ sub preview {
 			$total += $sum;
 
 			$csv .= sprintf( "%s;%d\n", $part, $amount );
+		}
+		elsif ( $line =~ $re_oldorder ) {
+			last;
 		}
 	}
 
@@ -172,7 +178,7 @@ sub preview {
 		$content .= "\n\n";
 	}
 
-	if ($flag{mwstversand} and $flag{mwst}) {
+	if ( $flag{mwstversand} and $flag{mwst} ) {
 		$shipping *= $flag{mwst};
 	}
 
@@ -222,8 +228,7 @@ sub preview {
 			);
 		}
 		else {
-			$self->redirect_to(
-				"$ENV{WIKI_URL}/$ENV{WIKI_PREFIX}/$site");
+			$self->redirect_to("$ENV{WIKI_URL}/$ENV{WIKI_PREFIX}/$site");
 		}
 		return;
 	}
