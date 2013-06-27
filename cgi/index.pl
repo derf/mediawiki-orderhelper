@@ -90,6 +90,7 @@ sub preview {
 	my $hms          = DateTime->now( time_zone => 'Europe/Berlin' )->hms;
 	my $nochangeline = '<!-- automatic changes prohibited -->';
 	my $finalized    = 0;
+	my $have_coupon  = 0;
 	my $csv          = q{};
 
 	if ( not $content ) {
@@ -185,13 +186,21 @@ sub preview {
 	# Coupon - Apply to shipping so it is divided equally
 	if ( $orders{'*'} ) {
 		$shipping += $orders{'*'};
+		$have_coupon = 1;
 		delete $orders{'*'};
 	}
 
 	$content .= sprintf( "Bestellsumme: %.2f + %.2f == %.2f\n",
 		$total, $shipping, $total + $shipping );
 	$content .= "{| class=\"wikitable\"\n";
-	$content .= "! Wer !! Summe !! Versandkostenanteil !! Gesamt !! Bezahlt\n";
+	if ($have_coupon) {
+		$content
+		  .= "! Wer !! Summe !! Rabatt-/Versandanteil !! Gesamt !! Bezahlt\n";
+	}
+	else {
+		$content
+		  .= "! Wer !! Summe !! Versandkostenanteil !! Gesamt !! Bezahlt\n";
+	}
 
 	for my $nick ( sort keys %orders ) {
 		my $shippingpart = $shipping * $orders{$nick} / $total;
