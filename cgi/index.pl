@@ -182,6 +182,12 @@ sub preview {
 		$shipping *= $flag{mwst};
 	}
 
+	# Coupon - Apply to shipping so it is divided equally
+	if ( $orders{'*'} ) {
+		$shipping += $orders{'*'};
+		delete $orders{'*'};
+	}
+
 	$content .= sprintf( "Bestellsumme: %.2f + %.2f == %.2f\n",
 		$total, $shipping, $total + $shipping );
 	$content .= "{| class=\"wikitable\"\n";
