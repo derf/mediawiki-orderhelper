@@ -41,6 +41,14 @@ Each line contains the person's name, their I<nametotal>, their shipping part
 Additionally, a fifth empty column is added, which can be edited manually
 to indicate if / how much someone has paid.
 
+=head2 COUPONS
+
+A part ordered by C<< * >> is added to the shipping cost, which will affect
+all participants. This is useful for coupons: Add a coupon for C<< * >>
+with a negative price and the price will be subtracted from the shipping
+cost. If saving remains after that, it will be divided between all
+participants, relative to their I<nametotal>.
+
 =head1 HANDLED ERRORS
 
 =head2 MISCALCULATED SUM
