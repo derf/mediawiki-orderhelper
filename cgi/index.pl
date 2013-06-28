@@ -155,7 +155,12 @@ sub preview {
 			}
 
 			$orders{$nick} += $sum;
-			$total += $sum;
+
+			# calculate total withuot coupons for now
+			# (it's distributed via the shipping cost)
+			if ( $nick ne '*' ) {
+				$total += $sum;
+			}
 
 			$csv .= sprintf( "%s;%d\n", $part, $amount );
 		}
