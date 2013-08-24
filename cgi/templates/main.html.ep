@@ -33,11 +33,9 @@
 % }
 </table>
 </div>
-% if ( $site eq 'Reichelt' ) {
 <div>
 %= link_to 'Warenkorb-Export' => url_for->query(site => $site, action => 'csv');
 </div>
-% }
 <div>
 Ins Wiki eintragen:
 </div>

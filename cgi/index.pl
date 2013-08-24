@@ -226,8 +226,10 @@ sub preview {
 	}
 
 	if ( $action eq 'csv' ) {
-		$self->res->headers->content_disposition(
-			'attachment; filename=reichelt.csv;');
+		if ($site eq 'Reichelt') {
+			$self->res->headers->content_disposition(
+				'attachment; filename=reichelt.csv;');
+		}
 		$self->render(
 			data   => $csv,
 			format => 'csv',
