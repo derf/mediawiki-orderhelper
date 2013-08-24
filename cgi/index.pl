@@ -216,7 +216,7 @@ sub preview {
 
 	$content .= "|}\n <!-- DO NOT EDIT BELOW THIS LINE -->";
 
-	if ( $action ne 'none' and $finalized ) {
+	if ( $action ~~ [qw[add finalize]] and $finalized ) {
 		$self->render(
 			'error',
 			error   => 'order already placed. automatic changes prohibited',
@@ -226,7 +226,7 @@ sub preview {
 	}
 
 	if ( $action eq 'csv' ) {
-		if ($site eq 'Reichelt') {
+		if ( $site eq 'Reichelt' ) {
 			$self->res->headers->content_disposition(
 				'attachment; filename=reichelt.csv;');
 		}
