@@ -140,8 +140,8 @@ sub preview {
 					@errors,
 					sprintf(
 						"%s (%s): provided sum is %.2f, but calculated sum "
-						  . "is %.2f == %.2f * %.2f. Δ %.2f. "
-						  . "Using provided sum for my calculations.\n",
+						  . "is %.2f (== %.2f * %.2f, Δ%.2f). "
+						  . "Using provided sum of %.2f for my calculations.\n",
 						$part,  $desc,   $sum, $calcsum,
 						$price, $amount, $sum - $calcsum
 					)
