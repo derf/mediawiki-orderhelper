@@ -65,8 +65,9 @@ sub is_float {
 
 sub preview {
 	my ($self) = @_;
-	my $action = $self->param('action') // 'none';
-	my $site = $self->param('site');
+	my $action       = $self->param('action') // 'none';
+	my $site         = $self->param('site');
+	my $freeshipping = $self->param('freeshipping') // 0;
 
 	my $re_flag = qr{
 		! (?<name> \S+ ) (?: \s* [*] \s* (?<value> \d+ [,.] \d+ ) )? }ox;
@@ -142,9 +143,8 @@ sub preview {
 						"%s (%s): provided sum is %.2f, but calculated sum "
 						  . "is %.2f (== %.2f * %.2f, Δ%.2f). "
 						  . "Using %.2f for my calculations.\n",
-						$part,  $desc,   $sum, $calcsum,
-						$price, $amount, $sum - $calcsum,
-						$sum
+						$part,  $desc,   $sum,            $calcsum,
+						$price, $amount, $sum - $calcsum, $sum
 					)
 				);
 			}
@@ -194,6 +194,10 @@ sub preview {
 		$shipping += $orders{'*'};
 		$have_coupon = 1;
 		delete $orders{'*'};
+	}
+
+	if ($freeshipping) {
+		$shipping = 0;
 	}
 
 	$content .= sprintf( "Bestellsumme: %.2f + %.2f == %.2f\n",
@@ -258,12 +262,13 @@ sub preview {
 
 	$self->render(
 		'main',
-		errors   => \@errors,
-		order    => \%orders,
-		total    => $total,
-		shipping => $shipping,
-		site     => $site,
-		version  => $VERSION,
+		errors       => \@errors,
+		order        => \%orders,
+		total        => $total,
+		freeshipping => $freeshipping,
+		shipping     => $shipping,
+		site         => $site,
+		version      => $VERSION,
 	);
 	return;
 }

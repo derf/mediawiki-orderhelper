@@ -34,7 +34,10 @@
 </table>
 </div>
 <div>
-%= link_to 'Warenkorb-Export' => url_for->query(site => $site, action => 'csv');
+<ul>
+<li><%= link_to 'Ohne Versandkosten' => url_for->query(site => $site, freeshipping => 1); %></li>
+<li><%= link_to 'Warenkorb-Export' => url_for->query(site => $site, action => 'csv'); %></li>
+</ul>
 </div>
 <div>
 Ins Wiki eintragen:
@@ -43,6 +46,7 @@ Ins Wiki eintragen:
 %= form_for '/' => begin
 %= hidden_field 'action' => 'add'
 %= hidden_field 'site' => stash('site')
+%= hidden_field 'freeshipping' => stash('freeshipping')
 %= submit_button 'Übernehmen'
 % end
 </div>
