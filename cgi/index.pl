@@ -75,7 +75,7 @@ sub preview {
 	my $re_orderline = qr{
 		^\| (?<part> [^|]+ ) \|\| (?<desc> [^|]+ ) \|\|
 		(?<price> [^|]+ ) \|\| (?<amount> [^|]+ ) \|\|
-		(?<sum> [^|]+ ) \|\| (?<nick> [^|]+ ) $ }ox;
+		(?<sum> [^|]+ ) \|\| \s* (?: \{\{U\| )?+ (?<nick> [^|]+? ) (?: \}\} )? \s* $ }ox;
 
 	my $re_oldorder = qr{
 		^ = = \s* alt }ox;
