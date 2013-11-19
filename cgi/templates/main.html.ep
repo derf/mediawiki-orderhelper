@@ -54,6 +54,7 @@ Ins Wiki eintragen:
 %= form_for '/' => begin
 %= hidden_field 'action' => 'finalize'
 %= hidden_field 'site' => stash('site')
+%= hidden_field 'freeshipping' => stash('freeshipping')
 %= submit_button 'Übernehmen und festhalten'
 (as in: "Ich hab bestellt", weitere Änderungen an der Kostenaufteilung nur
 noch manuell)
