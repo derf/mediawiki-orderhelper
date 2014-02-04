@@ -18,8 +18,10 @@ the wiki page:
   | part no || part desc || price || amount || sum || ordered by
 
 I<part no> and I<part desc> are only used to indicate lines in error messages.
-All calculations are done using I<sum> and I<ordered by>. If I<sum> does not
-match I<price> x I<amount>, a warning is printed.
+I<sum> is optional, I<price> x I<amount> will be used if it is left blank.  All
+calculations are done using either I<sum> or I<price> x I<amount> and I<ordered
+by>. If I<sum> was specified and does match I<price> x I<amount>, a warning is
+printed.
 
 Note that I<price>, I<amount> and I<sum> must be numbers and must not contain
 a currency. You may specify numbers both as C<< 1,23 >> and C<< 1.23 >>.
@@ -27,6 +29,10 @@ a currency. You may specify numbers both as C<< 1,23 >> and C<< 1.23 >>.
 Example line:
 
   | AKL 057-03 || Anreihklemme 3-polig, RM5,08 ||   0,30 ||  20 ||  6,00 || derf
+
+Also valid:
+
+  | AKL 057-03 ||                              ||   0.30 ||  20 ||       || {{U|derf}}
 
 Additionally, it will look for either C<< Versandkosten: 1,23 >> or
 C<< Versand: 1,23 >> to indicate the shipping price.
