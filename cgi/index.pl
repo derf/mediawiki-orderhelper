@@ -120,7 +120,7 @@ sub preview {
 			$price =~ tr{,}{.};
 			$sum   =~ tr{,}{.};
 
-			if ( grep { !is_float($_) } ( $price, $amount, $sum ) ) {
+			if ( grep { !is_float($_) } ( $price, $amount ) ) {
 				push(
 					@errors,
 					sprintf(
@@ -134,6 +134,8 @@ sub preview {
 				);
 				next;
 			}
+
+			$sum ||= sprintf( '%.2f', $price * $amount );
 
 			my $calcsum = sprintf( '%.2f', $price * $amount );
 			if ( $calcsum != $sum ) {
