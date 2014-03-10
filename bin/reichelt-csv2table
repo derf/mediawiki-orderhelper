@@ -1,0 +1,70 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use 5.010;
+
+no if $] >= 5.018, warnings => 'experimental::smartmatch';
+
+binmode( STDOUT, ':encoding(utf-8)' );
+
+use LWP::UserAgent;
+use XML::LibXML;
+
+my $nick = $ARGV[0] // q{};
+my $ua
+  = LWP::UserAgent->new( agent =>
+'Mozilla/5.0 (X11; Linux x86_64; rv:7.0.1) Gecko/20100101 Firefox/7.0.1 Iceweasel/7.0.1'
+  );
+$ua->env_proxy;
+
+sub get_price {
+	my ($partno) = @_;
+
+	my $res
+	  = $ua->post( 'http://such002.reichelt.de/index.html?ACTION=446&LA=446',
+		{ SEARCH => $partno } );
+
+	if ( $res->is_error ) {
+		die( "Error requesting ${partno}: " . $res->status_line . "\n" );
+	}
+	my $html = $res->decoded_content;
+	my $tree = XML::LibXML->load_html(
+		string            => $html,
+		recover           => 2,
+		suppress_errors   => 1,
+		suppress_warnings => 1,
+	);
+
+	my @nodes = $tree->findnodes(
+		'//div[@class="al_artikellist"]/div[@class="al_gallery_article"]');
+
+	for my $node (@nodes) {
+		my $prodid = $node->findnodes('./meta[@itemprop="productID"]')->[0]
+		  ->getAttribute('content');
+		my $price
+		  = $node->findnodes(
+			'.//div[@class="al_artlinks_price"]/div/p/span[@itemprop="price"]')
+		  ->[0]->textContent;
+
+		if ( $partno ne $prodid ) {
+			next;
+		}
+
+		return $price;
+	}
+	warn "Search returned no exact matches for ${partno}\n";
+	return;
+}
+
+while ( my $line = <STDIN> ) {
+	chomp $line;
+	my ( $product, $amount ) = split( /;/, $line );
+
+	my $price = get_price($product);
+
+	if ($price) {
+		printf( "|-\n| %-16s || %47s || %6s || %3d || %6s || %s\n",
+			$product, q{}, $price, $amount, q{}, $nick );
+	}
+}
