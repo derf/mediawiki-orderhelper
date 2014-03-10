@@ -4,21 +4,18 @@ use strict;
 use warnings;
 use 5.010;
 
+use LWP::UserAgent;
+use XML::LibXML;
+
 no if $] >= 5.018, warnings => 'experimental::smartmatch';
 
 binmode( STDOUT, ':encoding(utf-8)' );
 
-use LWP::UserAgent;
-use XML::LibXML;
-
 my $nick = $ARGV[0] // q{};
-my $ua
-  = LWP::UserAgent->new( agent =>
-'Mozilla/5.0 (X11; Linux x86_64; rv:7.0.1) Gecko/20100101 Firefox/7.0.1 Iceweasel/7.0.1'
-  );
+my $ua = LWP::UserAgent->new();
 $ua->env_proxy;
 
-sub get_price {
+sub get_prodinfo {
 	my ($partno) = @_;
 
 	my $res
@@ -40,7 +37,9 @@ sub get_price {
 		'//div[@class="al_artikellist"]/div[@class="al_gallery_article"]');
 
 	for my $node (@nodes) {
-		my $prodid = $node->findnodes('./meta[@itemprop="productID"]')->[0]
+		my $prodid = $node->findnodes('./meta[@itemprop = "productID"]')->[0]
+		  ->getAttribute('content');
+		my $name = $node->findnodes('./meta[@itemprop = "name"]')->[0]
 		  ->getAttribute('content');
 		my $price
 		  = $node->findnodes(
@@ -51,7 +50,10 @@ sub get_price {
 			next;
 		}
 
-		return $price;
+		return {
+			desc  => $name,
+			price => $price
+		};
 	}
 	warn "Search returned no exact matches for ${partno}\n";
 	return;
@@ -61,10 +63,11 @@ while ( my $line = <STDIN> ) {
 	chomp $line;
 	my ( $product, $amount ) = split( /;/, $line );
 
-	my $price = get_price($product);
+	my $prodinfo = get_prodinfo($product);
 
-	if ($price) {
-		printf( "|-\n| %-16s || %47s || %6s || %3d || %6s || %s\n",
-			$product, q{}, $price, $amount, q{}, $nick );
+	if ($prodinfo) {
+		printf( "|-\n| %-16s || %-47s || %6s || %3d || %6s || %s\n",
+			$product, $prodinfo->{desc}, $prodinfo->{price}, $amount, q{},
+			$nick );
 	}
 }
