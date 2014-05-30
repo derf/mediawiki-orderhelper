@@ -35,7 +35,12 @@
 </div>
 <div>
 <ul>
+% if (stash('freeshipping')) {
+<li><%= link_to 'Mit Versandkosten' => url_for->query(site => $site, freeshipping => 0); %></li>
+% }
+% else {
 <li><%= link_to 'Ohne Versandkosten' => url_for->query(site => $site, freeshipping => 1); %></li>
+% }
 <li><%= link_to 'Warenkorb-Export' => url_for->query(site => $site, action => 'csv'); %></li>
 </ul>
 </div>
