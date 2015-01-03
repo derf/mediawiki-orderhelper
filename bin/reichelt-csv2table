@@ -19,7 +19,7 @@ sub get_prodinfo {
 	my ($partno) = @_;
 
 	my $res
-	  = $ua->post( 'http://such002.reichelt.de/index.html?ACTION=446&LA=446',
+	  = $ua->post( 'http://www.reichelt.de/index.html?&ACTION=446&LA=0',
 		{ SEARCH => $partno } );
 
 	if ( $res->is_error ) {
