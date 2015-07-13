@@ -18,8 +18,7 @@ $ua->env_proxy;
 sub get_prodinfo {
 	my ($partno) = @_;
 
-	my $res
-	  = $ua->post( 'http://www.reichelt.de/index.html?&ACTION=446&LA=0',
+	my $res = $ua->post( 'http://www.reichelt.de/index.html?&ACTION=446&LA=0',
 		{ SEARCH => $partno } );
 
 	if ( $res->is_error ) {
@@ -37,6 +36,8 @@ sub get_prodinfo {
 		'//div[@class="al_artikellist"]/div[@class="al_gallery_article"]');
 
 	for my $node (@nodes) {
+
+		#say $node->toString(2);
 		my $prodid = $node->findnodes('./meta[@itemprop = "productID"]')->[0]
 		  ->getAttribute('content');
 		my $name = $node->findnodes('./meta[@itemprop = "name"]')->[0]
@@ -44,7 +45,16 @@ sub get_prodinfo {
 		my $price
 		  = $node->findnodes(
 			'.//div[@class="al_artlinks_price"]/div/p/span[@itemprop="price"]')
-		  ->[0]->textContent;
+		  ->[0];
+
+		# nicht lieferbar
+		if ( not defined $price ) {
+			return {
+				desc  => "$name (nicht lieferbar, nicht bestellbar)",
+				price => 0
+			};
+		}
+		$price = $price->textContent;
 
 		if ( $partno ne $prodid ) {
 			next;
