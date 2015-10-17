@@ -298,9 +298,9 @@ get '/help' => \&help;
 
 app->config(
 	hypnotoad => {
-		listen   => ['http://*:8098'],
+		listen   => [$ENV{LISTEN} // 'http://*:8098'],
 		pid_file => '/tmp/mediawiki-orderhelper.pid',
-		workers  => 1,
+		workers  => $ENV{WORKERS} // 1,
 	},
 );
 app->defaults( layout => 'default' );
