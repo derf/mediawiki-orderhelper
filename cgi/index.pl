@@ -9,6 +9,8 @@ use DateTime;
 use MediaWiki::API;
 use Mojolicious::Lite;
 
+no if $] >= 5.018, warnings => 'experimental::smartmatch';
+
 our $VERSION = '0.02';
 
 my $mw = MediaWiki::API->new(
