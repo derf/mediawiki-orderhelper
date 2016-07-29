@@ -1,4 +1,3 @@
-<div>
 % my $errors = stash('errors');
 % if ( $errors and @{ $errors } ) {
  <h1>Fehler</h1>
@@ -10,58 +9,61 @@
 %   }
  </ul>
 % }
-</div>
-<div>
-<h1>Aufteilung</h1>
-<ul>
-<li>Bestellsumme: <%= sprintf('%.2f', $total) %></li>
-<li>Rabatt/Versand: <%= sprintf('%.2f', $shipping) %></li>
-<li>Gesamt: <%= sprintf('%.2f', $total + $shipping) %></li>
+
+<h1 style="font-size: 200%"><%= $site %>-Sammelbestellung</h1>
+
+<ul class="collection">
+  <li class="collection-item">Bestellsumme: <%= sprintf('%.2f', $total) %></li>
+  <li class="collection-item">Rabatt/Versand: <%= sprintf('%.2f', $shipping) %></li>
+  <li class="collection-item">Gesamt: <%= sprintf('%.2f', $total + $shipping) %></li>
 </ul>
-<table>
-<tr><th>Nick</th><th>Anteil</th><th>Rabatt-/Versandanteil</th><th>Summe</th></tr>
-% my $total = stash('total');
-% my $shipping = stash('shipping');
-% my %order = %{ stash('order') };
-% for my $nick (sort keys %order ) {
-% my $shippingpart = $shipping * $order{$nick} / $total;
-<tr>
-<td> <%= $nick %> </td><td> <%= sprintf('%.2f', $order{$nick}) %> </td>
-<td> <%= sprintf('%.2f', $shippingpart) %> </td>
-<td> <%= sprintf('%.2f', $order{$nick} + $shippingpart) %> </td>
-</tr>
-% }
+<table class="striped">
+  <thead>
+    <tr><th>Nick</th><th>Anteil</th><th>Rabatt-/Versandanteil</th><th>Summe</th></tr>
+  </thead>
+  <tbody>
+%   my $total = stash('total');
+%   my $shipping = stash('shipping');
+%   my %order = %{ stash('order') };
+%   for my $nick (sort keys %order ) {
+%     my $shippingpart = $shipping * $order{$nick} / $total;
+      <tr>
+        <td> <%= $nick %> </td><td> <%= sprintf('%.2f', $order{$nick}) %> </td>
+        <td> <%= sprintf('%.2f', $shippingpart) %> </td>
+        <td> <%= sprintf('%.2f', $order{$nick} + $shippingpart) %> </td>
+      </tr>
+%   }
+  </tbody>
 </table>
+
+<div class="row">
+  <div class="col s12 m6 l6 center-align">
+%   if (stash('freeshipping')) {
+%=    link_to 'Mit Versandkosten' => url_for->query(site => $site, freeshipping => 0), class => 'waves-effect waves-light btn'
+%   }
+%   else {
+%=    link_to 'Ohne Versandkosten' => url_for->query(site => $site, freeshipping => 1), class => 'waves-effect waves-light btn'
+%   }
+  </div>
+  <div class="col s12 m6 l6 center-align">
+%=  link_to 'Warenkorb-Export' => url_for->query(site => $site, action => 'csv'), class => 'waves-effect waves-light btn'
+  </div>
 </div>
-<div>
-<ul>
-% if (stash('freeshipping')) {
-<li><%= link_to 'Mit Versandkosten' => url_for->query(site => $site, freeshipping => 0); %></li>
-% }
-% else {
-<li><%= link_to 'Ohne Versandkosten' => url_for->query(site => $site, freeshipping => 1); %></li>
-% }
-<li><%= link_to 'Warenkorb-Export' => url_for->query(site => $site, action => 'csv'); %></li>
-</ul>
-</div>
-<div>
-Ins Wiki eintragen:
-</div>
-<div>
-%= form_for '/' => begin
-%= hidden_field 'action' => 'add'
-%= hidden_field 'site' => stash('site')
-%= hidden_field 'freeshipping' => stash('freeshipping')
-%= submit_button 'Übernehmen'
-% end
-</div>
-<div>
-%= form_for '/' => begin
-%= hidden_field 'action' => 'finalize'
-%= hidden_field 'site' => stash('site')
-%= hidden_field 'freeshipping' => stash('freeshipping')
-%= submit_button 'Übernehmen und festhalten'
-(as in: "Ich hab bestellt", weitere Änderungen an der Kostenaufteilung nur
-noch manuell)
-% end
+<div class="row">
+  <div class="col s12 m6 l6 center-align">
+%=  form_for '/' => begin
+%=    hidden_field 'action' => 'add'
+%=    hidden_field 'site' => stash('site')
+%=    hidden_field 'freeshipping' => stash('freeshipping')
+%=    submit_button 'Auf Wikiseite übernehmen', class => 'waves-effect waves-light btn'
+%   end
+  </div>
+  <div class="col s12 m6 l6 center-align">
+%=  form_for '/' => begin
+%=    hidden_field 'action' => 'finalize'
+%=    hidden_field 'site' => stash('site')
+%=    hidden_field 'freeshipping' => stash('freeshipping')
+%=    submit_button 'Übernehmen und festhalten', class => 'waves-effect waves-light btn'
+%   end
+  </div>
 </div>

@@ -3,45 +3,25 @@
 <head>
 	<title>Chaosdorf Mediawiki-Sammelbestellungs-Helfer</title>
 	<meta charset="UTF-8">
-
-	<style type="text/css">
-
-	html {
-		font-family: Sans-Serif;
-	}
-
-	body {
-		margin: 2em;
-	}
-
-	div.about {
-		position: absolute;
-		right: 1em;
-		top: 1em;
-		font-size: 90%;
-		color: #666666;
-	}
-
-	div.about a {
-		color: #000066;
-		text-decoration: none;
-	}
-
-	input, select {
-		border: 1px solid black;
-	}
-
-	</style>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	%= stylesheet '/css/materialize.min.css'
+	%= javascript '/js/jquery-2.2.4.min.js'
+	%= javascript '/js/materialize.min.js'
 </head>
 <body>
 
-<div class="about">
-<a href="https://github.com/derf/mediawiki-orderhelper">
-mediawiki-orderhelper</a> v<%= $version %><br/>
-(<a href="help">help</a>)<br/>
+<nav>
+<div class="nav-wrapper container">
+<a href="https://github.com/derf/mediawiki-orderhelper" class="brand-logo">
+mediawiki-orderhelper v<%= $version %></a>
+<ul id="nav-mobile" class="right hide-on-small-and-down">
+<li><a href="help">help</a></li>
+</ul>
 </div>
+</nav>
 
+<div class="container">
 %= content
-
+</div>
 </body>
 </html>
