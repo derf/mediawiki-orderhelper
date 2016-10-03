@@ -10,11 +10,10 @@
 </head>
 <body>
 
-<nav>
+<nav class="deep-purple">
 <div class="nav-wrapper container">
-<a href="https://github.com/derf/mediawiki-orderhelper" class="brand-logo">
-mediawiki-orderhelper v<%= $version %></a>
-<ul id="nav-mobile" class="right hide-on-small-and-down">
+<a href="https://github.com/derf/mediawiki-orderhelper" class="brand-logo">mw-oh</a>
+<ul id="nav-mobile" class="right">
 <li><a href="help">help</a></li>
 </ul>
 </div>
